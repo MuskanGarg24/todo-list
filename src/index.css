@@ -6,4 +6,13 @@
 
 :root {
   font-family: "Ubuntu", sans-serif;
+  background-color: #ebebeb;
+}
+
+.whiteColor {
+  color: white;
+}
+
+.curve {
+  border-radius: 0 0 100% 100% / 0 0 70% 70%;
 }

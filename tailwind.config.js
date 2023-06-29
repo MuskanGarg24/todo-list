@@ -6,7 +6,16 @@ export default {
   ],
   theme: {
     extend: {},
+    colors: {
+      'primaryColor': '#ACC4E3',
+      'secondaryColor': '#EBEBEB',
+      'textColor': '86959E#',
+      'success': '#359F7A'
+    }
   },
-  plugins: [],
+  plugins: [require("daisyui")],
+  daisyui: {
+    themes: ["light"],
+  },
 }
 
