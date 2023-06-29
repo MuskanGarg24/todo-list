@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import Search from '../assets/icons/Search';
 import Circle from '../assets/icons/Circle';
 import Trash from '../assets/icons/Trash';
@@ -41,7 +41,8 @@ const List = () => {
     );
 
     return (
-        <div className='w-[25vw] h-auto m-auto mt-[10vh] bg-[white] shadow-md shadow-primaryColor rounded-md'>
+        <div
+            className='w-[25vw] h-auto m-auto mt-[10vh] bg-[white] shadow-md shadow-primaryColor rounded-md'>
             <div className='bg-primaryColor p-5 text-center curve'>
                 <h1 className='whiteColor text-lg font-semibold'>{currentDate}</h1>
                 <p className='whiteColor text-md font-medium mt-1'> {taskCount} {taskCount === 1 ? 'task' : 'tasks'}</p>
