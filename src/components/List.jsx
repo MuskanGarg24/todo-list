@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Search from '../assets/icons/Search';
 import Circle from '../assets/icons/Circle';
 import Trash from '../assets/icons/Trash';
@@ -10,6 +10,8 @@ const List = () => {
     const [tasks, setTasks] = useState([]);
     const [inputText, setInputText] = useState('');
     const [searchText, setSearchText] = useState('');
+    const [currentDate, setCurrentDate] = useState('');
+    const [taskCount, setTaskCount] = useState(0);
 
     // method to handle input change
     const handleInputChange = (e) => {
@@ -57,11 +59,32 @@ const List = () => {
         task.text.toLowerCase().includes(searchText.toLowerCase())
     );
 
+    // for current date and count
+    useEffect(() => {
+        // current date
+        const today = new Date();
+
+        const formattedDate = new Intl.DateTimeFormat('en-US', {
+            weekday: 'short',
+            month: 'long',
+            day: 'numeric',
+            year: 'numeric',
+        }).format(today);
+
+        // Get the count of tasks
+        const count = tasks.length;
+
+        // Update the state variables
+        setCurrentDate(formattedDate);
+        setTaskCount(count);
+    }, [tasks]);
+
+
     return (
         <div className='w-[25vw] h-auto m-auto mt-[10vh] bg-[white] shadow-md shadow-primaryColor rounded-md'>
             <div className='bg-primaryColor p-5 text-center curve'>
-                <h1 className='whiteColor text-lg font-semibold'>Thu, June 29, 2023</h1>
-                <p className='whiteColor text-md font-medium mt-1'>6 tasks</p>
+                <h1 className='whiteColor text-lg font-semibold'>{currentDate}</h1>
+                <p className='whiteColor text-md font-medium mt-1'> {taskCount} {taskCount === 1 ? 'task' : 'tasks'}</p>
             </div>
             <form onSubmit={handleTaskSubmit} className='px-5 mt-4'>
                 <div className='flex justify-center space-x-4 pt-2'>
