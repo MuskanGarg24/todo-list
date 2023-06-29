@@ -3,6 +3,10 @@ import Search from '../assets/icons/Search';
 import Circle from '../assets/icons/Circle';
 import Trash from '../assets/icons/Trash';
 import Done from '../assets/icons/Done';
+import handleTaskSubmit from '../js/handleTaskSubmit';
+import handleTaskComplete from '../js/handleTaskComplete';
+import handleTaskDelete from '../js/handleTaskDelete';
+import useListEffects from '../js/useListEffects';
 
 const List = () => {
 
@@ -13,72 +17,28 @@ const List = () => {
     const [currentDate, setCurrentDate] = useState('');
     const [taskCount, setTaskCount] = useState(0);
 
-    // method to handle input change
-    const handleInputChange = (e) => {
-        setInputText(e.target.value);
-    };
-
-    // method to handle search change
-    const handleSearchChange = (e) => {
-        setSearchText(e.target.value);
-    };
-
     // method to add new tasks in list
-    const handleTaskSubmit = (e) => {
-        e.preventDefault();
-        if (inputText.trim() !== '') {
-            const newTask = {
-                id: Date.now(),
-                text: inputText,
-                completed: false,
-            };
-            setTasks([...tasks, newTask]);
-            setInputText('');
-        }
-    };
+    const handleTaskSubmission = (e) => {
+        handleTaskSubmit(e, inputText, setInputText, tasks, setTasks);
+    }
 
-    // method to update list
-    const handleTaskComplete = (taskId) => {
-        const updatedTasks = tasks.map((task) => {
-            if (task.id === taskId) {
-                return { ...task, completed: !task.completed };
-            }
-            return task;
-        });
-        setTasks(updatedTasks);
+    // method to handle task completion
+    const handleCompleteTask = (taskId) => {
+        handleTaskComplete(taskId, tasks, setTasks);
     };
 
     // method to delete tasks from list
-    const handleTaskDelete = (taskId) => {
-        const updatedTasks = tasks.filter((task) => task.id !== taskId);
-        setTasks(updatedTasks);
+    const handleDeleteTask = (taskId) => {
+        handleTaskDelete(taskId, tasks, setTasks);
     };
+
+    // for current date and count
+    useListEffects(tasks, setTaskCount, setCurrentDate);
 
     // method to filter task according to search query
     const filteredTasks = tasks.filter((task) =>
         task.text.toLowerCase().includes(searchText.toLowerCase())
     );
-
-    // for current date and count
-    useEffect(() => {
-        // current date
-        const today = new Date();
-
-        const formattedDate = new Intl.DateTimeFormat('en-US', {
-            weekday: 'short',
-            month: 'long',
-            day: 'numeric',
-            year: 'numeric',
-        }).format(today);
-
-        // Get the count of tasks
-        const count = tasks.length;
-
-        // Update the state variables
-        setCurrentDate(formattedDate);
-        setTaskCount(count);
-    }, [tasks]);
-
 
     return (
         <div className='w-[25vw] h-auto m-auto mt-[10vh] bg-[white] shadow-md shadow-primaryColor rounded-md'>
@@ -86,14 +46,14 @@ const List = () => {
                 <h1 className='whiteColor text-lg font-semibold'>{currentDate}</h1>
                 <p className='whiteColor text-md font-medium mt-1'> {taskCount} {taskCount === 1 ? 'task' : 'tasks'}</p>
             </div>
-            <form onSubmit={handleTaskSubmit} className='px-5 mt-4'>
+            <form onSubmit={handleTaskSubmission} className='px-5 mt-4'>
                 <div className='flex justify-center space-x-4 pt-2'>
                     <div>
                         <input
                             type="text"
                             placeholder="Add new task"
                             value={inputText}
-                            onChange={handleInputChange}
+                            onChange={(e) => { setInputText(e.target.value) }}
                             className='py-1 px-2 mt-2 border-2 border-primaryColor rounded-md focus:outline-none'
                         />
                     </div>
@@ -112,7 +72,7 @@ const List = () => {
                         placeholder='Search tasks'
                         className='py-1 pl-10 pr-2 border-2 border-primaryColor rounded-md focus:outline-none'
                         value={searchText}
-                        onChange={handleSearchChange}
+                        onChange={(e) => { setSearchText(e.target.value) }}
                     />
                 </div>
             </div>
@@ -123,10 +83,10 @@ const List = () => {
                             {!task.completed ? <li className='text-[18px]' key={task.id}>{task.text}</li> : <li className='text-[18px] text-[#86959E]' key={task.id}>{task.text}</li>}
                         </div>
                         <div className='flex space-x-1'>
-                            <div onClick={() => handleTaskComplete(task.id)}>
+                            <div onClick={() => handleCompleteTask(task.id)}>
                                 {task.completed ? <Done /> : <Circle />}
                             </div>
-                            <div onClick={() => handleTaskDelete(task.id)}>
+                            <div onClick={() => handleDeleteTask(task.id)}>
                                 <Trash />
                             </div>
                         </div>
